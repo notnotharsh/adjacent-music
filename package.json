@@ -9,11 +9,13 @@
     "crypto": "^1.0.1",
     "express": "^4.18.2",
     "querystring": "^0.2.1",
+    "request": "^2.88.2",
     "requests": "^0.3.0"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "node app.js"
+    "test": "node app.js",
+    "build": "node app.js"
   },
   "repository": {
     "type": "git",
