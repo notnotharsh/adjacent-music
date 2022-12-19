@@ -39,12 +39,9 @@ var stateKey = 'spotify_auth_state';
 const code_verifier = generateRandomString(64);
 
 var app = express();
-server = https.createServer({key: key, cert: cert }, app);
 app.use(express.static(__dirname + '/public'))
    .use(cors())
    .use(cookieParser());
-
-app.get('/', (req, res) => { res.send('this is a secure server') });
 
 app.get('/login', function(req, res) {
   generateCodeChallenge(code_verifier).then((code_challenge) => {
@@ -114,5 +111,5 @@ app.get('/refresh_token', function(req, res) {
   });
 });
 
-server.listen(8888, () => { console.log('listening on 8888') });
-console.log(crypto.subtle)
+console.log('listening on 8888');
+app.listen(8888);
