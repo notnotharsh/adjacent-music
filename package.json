@@ -1,5 +1,5 @@
 {
-  "name": "more-music",
+  "name": "adjacent-music",
   "version": "1.0.0",
   "description": "node app to recommend music outside of regular genres from spotify api",
   "main": "app.js",
@@ -19,12 +19,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/notnotharsh/more-music.git"
+    "url": "git+https://github.com/notnotharsh/adjacent-music.git"
   },
   "author": "Harsh Tiwary",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/notnotharsh/more-music/issues"
+    "url": "https://github.com/notnotharsh/adjacent-music/issues"
   },
-  "homepage": "https://github.com/notnotharsh/more-music#readme"
+  "homepage": "https://github.com/notnotharsh/adjacent-music#readme"
 }
