@@ -22,44 +22,36 @@
   <body>
     <div class="container">
       <div id="login">
-        <h1>This is the <strong>more-music</strong> project</h1>
-        <a href="/login">Log in with Spotify</a>
+        <h1>this is the <strong>more-music</strong> project</h1>
+        <a href="/login">log in with spotify</a>
       </div>
       <div id="loggedin">
-        <div id="user-profile">
-        </div>
-        <div id="oauth">
-        </div>
-        <button class="btn btn-default" id="obtain-new-token">Obtain new token using the refresh token</button>
+        <div id="user-top"></div>
       </div>
     </div>
 
-    <script id="user-profile-template" type="text/x-handlebars-template">
-      <h1>Hello, {{display_name}}</h1>
-      <div class="media">
-        <div class="pull-left">
-          <img class="media-object" width="150" src="{{images.0.url}}" />
-        </div>
-        <div class="media-body">
-          <dl class="dl-horizontal">
-            <dt>Display name</dt><dd class="clearfix">{{display_name}}</dd>
-            <dt>ID</dt><dd>{{id}}</dd>
-            <dt>Email</dt><dd>{{email}}</dd>
-            <dt>Spotify URI</dt><dd><a href="{{external_urls.spotify}}">{{external_urls.spotify}}</a></dd>
-            <dt>Link</dt><dd><a href="{{href}}">{{href}}</a></dd>
-            <dt>Profile Image</dt><dd class="clearfix"><a href="{{images.0.url}}">{{images.0.url}}</a></dd>
-            <dt>Country</dt><dd>{{country}}</dd>
-          </dl>
-        </div>
-      </div>
-    </script>
-
-    <script id="oauth-template" type="text/x-handlebars-template">
-      <h2>oAuth info</h2>
-      <dl class="dl-horizontal">
-        <dt>Access Token</dt><dd class="text-overflow">{{access_token}}</dd>
-        <dt>Refresh Token</dt><dd class="text-overflow">{{refresh_token}}</dd>
-      </dl>
+    <script id="user-top-template" type="text/x/handlebars-template">
+    <h1>your top artists</h1>
+    <p>{{items.0.name}} {{items.0.genres}}</p>
+    <p>{{items.1.name}} {{items.1.genres}}</p>
+    <p>{{items.2.name}} {{items.2.genres}}</p>
+    <p>{{items.3.name}} {{items.3.genres}}</p>
+    <p>{{items.4.name}} {{items.4.genres}}</p>
+    <p>{{items.5.name}} {{items.5.genres}}</p>
+    <p>{{items.6.name}} {{items.6.genres}}</p>
+    <p>{{items.7.name}} {{items.7.genres}}</p>
+    <p>{{items.8.name}} {{items.8.genres}}</p>
+    <p>{{items.9.name}} {{items.9.genres}}</p>
+    <p>{{items.10.name}} {{items.10.genres}}</p>
+    <p>{{items.11.name}} {{items.11.genres}}</p>
+    <p>{{items.12.name}} {{items.12.genres}}</p>
+    <p>{{items.13.name}} {{items.13.genres}}</p>
+    <p>{{items.14.name}} {{items.14.genres}}</p>
+    <p>{{items.15.name}} {{items.15.genres}}</p>
+    <p>{{items.16.name}} {{items.16.genres}}</p>
+    <p>{{items.17.name}} {{items.17.genres}}</p>
+    <p>{{items.18.name}} {{items.18.genres}}</p>
+    <p>{{items.19.name}} {{items.19.genres}}</p>
     </script>
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
@@ -81,13 +73,9 @@
           return hashParams;
         }
 
-        var userProfileSource = document.getElementById('user-profile-template').innerHTML,
-            userProfileTemplate = Handlebars.compile(userProfileSource),
-            userProfilePlaceholder = document.getElementById('user-profile');
-
-        var oauthSource = document.getElementById('oauth-template').innerHTML,
-            oauthTemplate = Handlebars.compile(oauthSource),
-            oauthPlaceholder = document.getElementById('oauth');
+        var userTopSource = document.getElementById('user-top-template').innerHTML,
+            userTopTemplate = Handlebars.compile(userTopSource),
+            userTopPlaceholder = document.getElementById('user-top');
 
         var params = getHashParams();
 
@@ -96,22 +84,21 @@
             error = params.error;
 
         if (error) {
-          alert('There was an error during the authentication');
+          alert('this is not an epic gamer moment');
         } else {
           if (access_token) {
-            // render oauth info
-            oauthPlaceholder.innerHTML = oauthTemplate({
-              access_token: access_token,
-              refresh_token: refresh_token
-            });
 
             $.ajax({
-                url: 'https://api.spotify.com/v1/me',
+                url: 'https://api.spotify.com/v1/me/top/artists',
                 headers: {
                   'Authorization': 'Bearer ' + access_token
                 },
+                data: {
+                  limit: 50,
+                  time_range: "long_term"
+                },
                 success: function(response) {
-                  userProfilePlaceholder.innerHTML = userProfileTemplate(response);
+                  userTopPlaceholder.innerHTML = userTopTemplate(response);
 
                   $('#login').hide();
                   $('#loggedin').show();
@@ -122,22 +109,6 @@
               $('#login').show();
               $('#loggedin').hide();
           }
-
-          document.getElementById('obtain-new-token').addEventListener('click', function() {
-            $.ajax({
-              url: '/refresh_token',
-              data: {
-                'refresh_token': refresh_token
-              }
-            }).done(function(data) {
-              access_token = data.access_token;
-              refresh_token = data.refresh_token;
-              oauthPlaceholder.innerHTML = oauthTemplate({
-                access_token: access_token,
-                refresh_token: refresh_token
-              });
-            });
-          }, false);
         }
       })();
     </script>
