@@ -54,7 +54,7 @@ app.get('/login', function(req, res) {
         code_challenge_method: "S256",
         code_challenge,
     }));
-  }).catch((err) => {res.redirect("/login")});
+  }).catch((err) => {alert(err);});
 });
 
 app.get('/callback', function(req, res) {
