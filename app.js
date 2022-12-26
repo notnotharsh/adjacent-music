@@ -10,8 +10,9 @@ const sha256 = require('js-sha256');
 let rawdata = fs.readFileSync('keys.json');
 let keys = JSON.parse(rawdata)
 
+var remote = 1;
 var client_id = keys['CLIENT_ID'];
-var redirect_uri = keys['REDIRECT_URI'];
+var redirect_uri = keys['REDIRECT_URI'][remote];
 
 var generateRandomString = function(length) {
   var text = '';
