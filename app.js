@@ -86,18 +86,23 @@ app.get('/callback', function(req, res) {
         
         var access_token = body.access_token,
             refresh_token = body.refresh_token;
+        /*
         var options = {
-          url: 'https://api.spotify.com/v1/me',
+          url: 'https://api.spotify.com/v1/me/top/artists/?limit=50&time_range=long_term',
           headers: { 'Authorization': 'Bearer ' + access_token },
           json: true
         };
-
+        genres_ = ""
         // use the access token to access the Spotify Web API
-        request.get(options, function(error, response, body) {});
+        request.get(options, function(error, response, body) {
+          genres = (JSON.stringify(body));
+        });
+        */
 
         // we can also pass the token to the browser to make requests from there
         res.cookie("access_token", access_token);
         res.cookie("refresh_token", refresh_token);
+        // res.cookie("top_genres", genres);
         res.redirect('/#' +
           querystring.stringify({
             access_token: access_token,

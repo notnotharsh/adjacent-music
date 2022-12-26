@@ -17,6 +17,7 @@
         width: 500px;
       }
     </style>
+    <script src="utils.js" type="text/javascript"></script>
   </head>
 
   <body>
@@ -29,30 +30,6 @@
         <div id="user-top"></div>
       </div>
     </div>
-
-    <script id="user-top-template" type="text/x/handlebars-template">
-    <h1>your top artists</h1>
-    <p>{{items.0.name}} {{items.0.genres}}</p>
-    <p>{{items.1.name}} {{items.1.genres}}</p>
-    <p>{{items.2.name}} {{items.2.genres}}</p>
-    <p>{{items.3.name}} {{items.3.genres}}</p>
-    <p>{{items.4.name}} {{items.4.genres}}</p>
-    <p>{{items.5.name}} {{items.5.genres}}</p>
-    <p>{{items.6.name}} {{items.6.genres}}</p>
-    <p>{{items.7.name}} {{items.7.genres}}</p>
-    <p>{{items.8.name}} {{items.8.genres}}</p>
-    <p>{{items.9.name}} {{items.9.genres}}</p>
-    <p>{{items.10.name}} {{items.10.genres}}</p>
-    <p>{{items.11.name}} {{items.11.genres}}</p>
-    <p>{{items.12.name}} {{items.12.genres}}</p>
-    <p>{{items.13.name}} {{items.13.genres}}</p>
-    <p>{{items.14.name}} {{items.14.genres}}</p>
-    <p>{{items.15.name}} {{items.15.genres}}</p>
-    <p>{{items.16.name}} {{items.16.genres}}</p>
-    <p>{{items.17.name}} {{items.17.genres}}</p>
-    <p>{{items.18.name}} {{items.18.genres}}</p>
-    <p>{{items.19.name}} {{items.19.genres}}</p>
-    </script>
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
@@ -73,7 +50,7 @@
           return hashParams;
         }
 
-        var userTopSource = document.getElementById('user-top-template').innerHTML,
+        var userTopSource = generateGenreHTML(),
             userTopTemplate = Handlebars.compile(userTopSource),
             userTopPlaceholder = document.getElementById('user-top');
 
