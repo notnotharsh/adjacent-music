@@ -4,8 +4,8 @@ const https = require('https');
 const cors = require('cors');
 const querystring = require('querystring');
 const cookieParser = require('cookie-parser');
-crypto = require('node:crypto');
 const fs = require('fs');
+const sha256 = require('js-sha256');
 
 let rawdata = fs.readFileSync('keys.json');
 let keys = JSON.parse(rawdata)
@@ -24,8 +24,10 @@ var generateRandomString = function(length) {
 };
 
 async function generateCodeChallenge(code_verifier) {
-  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(code_verifier));
-  return btoa(String.fromCharCode(...new Uint8Array(digest)))
+  var hash = sha256.create();
+  var hex_str = (hash.update(code_verifier).hex());
+  var hashed_str = Buffer.from(hex_str, 'hex').toString('base64');
+  return hashed_str
     .replace(/=/g, '')
     .replace(/\+/g, '-')
     .replace(/\//g, '_');
