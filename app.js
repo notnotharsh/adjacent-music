@@ -4,8 +4,7 @@ const https = require('https');
 const cors = require('cors');
 const querystring = require('querystring');
 const cookieParser = require('cookie-parser');
-const crypto = require('crypto');
-
+crypto = require('node:crypto');
 const fs = require('fs');
 
 let rawdata = fs.readFileSync('keys.json');
