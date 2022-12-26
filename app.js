@@ -107,11 +107,7 @@ app.get('/callback', function(req, res) {
         res.cookie("access_token", access_token);
         res.cookie("refresh_token", refresh_token);
         // res.cookie("top_genres", genres);
-        res.redirect('/#' +
-          querystring.stringify({
-            access_token: access_token,
-            refresh_token: refresh_token
-          }));
+        res.redirect('/');
       } else {
         res.redirect('/#' +
           querystring.stringify({
