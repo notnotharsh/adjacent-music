@@ -66,16 +66,21 @@
           if (access_token) {
 
             $.ajax({
-                url: 'https://api.spotify.com/v1/me/top/artists',
+                url: '/compute', // 'https://api.spotify.com/v1/me/top/artists',
+                /*
                 headers: {
                   'Authorization': 'Bearer ' + access_token
                 },
+                */
                 data: {
+                  /*
                   limit: 50,
                   time_range: "long_term"
+                  */
+                 access_token: access_token
                 },
                 success: function(response) {
-                  userTopPlaceholder.innerHTML = userTopTemplate(response);
+                  userTopPlaceholder.innerHTML = (response);// userTopTemplate(response);
 
                   $('#login').hide();
                   $('#loggedin').show();

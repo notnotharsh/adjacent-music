@@ -7,10 +7,13 @@ const cookieParser = require('cookie-parser');
 const fs = require('fs');
 const sha256 = require('js-sha256');
 
+var spawn = require('child_process').spawn
+var child = spawn('pwd')
+
 let rawdata = fs.readFileSync('keys.json');
 let keys = JSON.parse(rawdata)
 
-const remote = 1;
+const remote = 0;
 var client_id = keys['CLIENT_ID'];
 var redirect_uri = keys['REDIRECT_URI'][remote];
 
@@ -88,26 +91,16 @@ app.get('/callback', function(req, res) {
     request.post(authOptions, function(error, response, body) {
       if (!error && response.statusCode === 200) {
         
-        var access_token = body.access_token,
-            refresh_token = body.refresh_token;
-        /*
-        var options = {
-          url: 'https://api.spotify.com/v1/me/top/artists/?limit=50&time_range=long_term',
-          headers: { 'Authorization': 'Bearer ' + access_token },
-          json: true
-        };
-        genres_ = ""
-        // use the access token to access the Spotify Web API
-        request.get(options, function(error, response, body) {
-          genres = (JSON.stringify(body));
-        });
-        */
+      var access_token = body.access_token,
+        refresh_token = body.refresh_token;
+      request.get({url: "/compute?access_token=" + access_token}, function(err, response, body) {
+        console.log(body);
+      });
 
         // we can also pass the token to the browser to make requests from there
       res.cookie("access_token", access_token, {expires: new Date(Date.now() + 3600000)});
       res.cookie("refresh_token", refresh_token, {expires: new Date(Date.now() + 3600000)});
-        // res.cookie("top_genres", genres);
-        res.redirect('/');
+      res.redirect('/compute');
       } else {
         res.redirect('/#' +
           querystring.stringify({
@@ -139,6 +132,31 @@ app.get('/refresh_token', function(req, res) {
       res.header("Access-Control-Allow-Origin", "*");
       res.redirect("/login");
     }
+  });
+});
+
+app.get('/compute', function(req, res) {
+  var access_token = req.query.access_token;
+  var options = {
+    url: 'https://api.spotify.com/v1/me/top/artists/?limit=50&time_range=long_term',
+    headers: { 'Authorization': 'Bearer ' + access_token },
+    json: true
+  };
+  genres_ = ""
+  // use the access token to access the Spotify Web API
+  request.get(options, function(error, response, body) {
+    top_artists = (JSON.stringify(body));
+    fs.writeFile("analysis/top_artists.json", top_artists, (err) => {});
+    const python = spawn('python3', ['analysis/compute.py']);
+    python.stdout.on('data', function (data) {
+      json_string = data.toString();
+      genre_object = JSON.parse(json_string.replaceAll("\'", "\""));
+      dataToSend = "<h1>your top genres</h1>";
+      for (const genre in genre_object) {
+        dataToSend += `<p>${genre}: ${(parseInt(genre_object[genre])).toString()}</p>` 
+      }
+    });
+    python.on('close', (code) => {res.send((dataToSend))});
   });
 });
 
