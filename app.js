@@ -93,14 +93,9 @@ app.get('/callback', function(req, res) {
         
       var access_token = body.access_token,
         refresh_token = body.refresh_token;
-      request.get({url: "/compute?access_token=" + access_token}, function(err, response, body) {
-        console.log(body);
-      });
-
-        // we can also pass the token to the browser to make requests from there
       res.cookie("access_token", access_token, {expires: new Date(Date.now() + 3600000)});
       res.cookie("refresh_token", refresh_token, {expires: new Date(Date.now() + 3600000)});
-      res.redirect('/compute');
+      res.redirect('/');
       } else {
         res.redirect('/#' +
           querystring.stringify({
@@ -135,7 +130,7 @@ app.get('/refresh_token', function(req, res) {
   });
 });
 
-app.get('/compute', function(req, res) {
+app.get('/analysis', function(req, res) {
   var access_token = req.query.access_token;
   var options = {
     url: 'https://api.spotify.com/v1/me/top/artists/?limit=50&time_range=long_term',
