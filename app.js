@@ -147,7 +147,7 @@ app.get('/analysis', function(req, res) {
   var dataToSend = "<h1>your top genres</h1>";
   python.stdout.on('data', function (data) {
     var json_string = data.toString();
-    var genre_object = JSON.parse(json_string.replaceAll("\'", "\""));
+    var genre_object = JSON.parse(json_string.replace(/'/g, "\""));
     for (const genre in genre_object) {
       dataToSend += `<p>${genre}: ${(parseInt(genre_object[genre])).toString()}</p>` 
     }
