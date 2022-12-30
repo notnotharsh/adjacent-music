@@ -144,10 +144,10 @@ app.get('/analysis', function(req, res) {
     fs.writeFile("analysis/top_artists.json", top_artists, (err) => {});
   });
   const python = spawn('python3', ['analysis/compute.py']);
+  var dataToSend = "<h1>your top genres</h1>";
   python.stdout.on('data', function (data) {
-    json_string = data.toString();
-    genre_object = JSON.parse(json_string.replaceAll("\'", "\""));
-    dataToSend = "<h1>your top genres</h1>";
+    var json_string = data.toString();
+    var genre_object = JSON.parse(json_string.replaceAll("\'", "\""));
     for (const genre in genre_object) {
       dataToSend += `<p>${genre}: ${(parseInt(genre_object[genre])).toString()}</p>` 
     }
