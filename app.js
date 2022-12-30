@@ -13,7 +13,7 @@ var child = spawn('pwd')
 let rawdata = fs.readFileSync('keys.json');
 let keys = JSON.parse(rawdata)
 
-const remote = 0;
+const remote = 1;
 var client_id = keys['CLIENT_ID'];
 var redirect_uri = keys['REDIRECT_URI'][remote];
 
@@ -142,17 +142,17 @@ app.get('/analysis', function(req, res) {
   request.get(options, function(error, response, body) {
     top_artists = (JSON.stringify(body));
     fs.writeFile("analysis/top_artists.json", top_artists, (err) => {});
-    const python = spawn('python3', ['analysis/compute.py']);
-    python.stdout.on('data', function (data) {
-      json_string = data.toString();
-      genre_object = JSON.parse(json_string.replaceAll("\'", "\""));
-      dataToSend = "<h1>your top genres</h1>";
-      for (const genre in genre_object) {
-        dataToSend += `<p>${genre}: ${(parseInt(genre_object[genre])).toString()}</p>` 
-      }
-    });
-    python.on('close', (code) => {res.send((dataToSend))});
   });
+  const python = spawn('python3', ['analysis/compute.py']);
+  python.stdout.on('data', function (data) {
+    json_string = data.toString();
+    genre_object = JSON.parse(json_string.replaceAll("\'", "\""));
+    dataToSend = "<h1>your top genres</h1>";
+    for (const genre in genre_object) {
+      dataToSend += `<p>${genre}: ${(parseInt(genre_object[genre])).toString()}</p>` 
+    }
+  });
+  python.on('close', (code) => {res.send((dataToSend))});
 });
 
 const PORT = process.env.PORT || 8888;
