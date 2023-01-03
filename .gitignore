@@ -1,2 +1,2 @@
 node_modules/
-analysis/top_artists.json
+analysis/*.json

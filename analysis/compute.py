@@ -2,7 +2,7 @@ import sys
 import json
 
 data = {}
-with open('analysis/top_artists.json') as json_file:
+with open(sys.argv[1]) as json_file:
     data = json.load(json_file);
 
 genres = {}

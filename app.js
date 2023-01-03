@@ -13,7 +13,7 @@ var child = spawn('pwd')
 let rawdata = fs.readFileSync('keys.json');
 let keys = JSON.parse(rawdata)
 
-const remote = 1;
+const remote = 0;
 var client_id = keys['CLIENT_ID'];
 var redirect_uri = keys['REDIRECT_URI'][remote];
 
@@ -132,27 +132,39 @@ app.get('/refresh_token', function(req, res) {
 
 app.get('/analysis', function(req, res) {
   var access_token = req.query.access_token;
+  var path = "analysis/top_artists_" + generateRandomString(16) + ".json";
   var options = {
-    url: 'https://api.spotify.com/v1/me/top/artists/?limit=50&time_range=long_term',
     headers: { 'Authorization': 'Bearer ' + access_token },
     json: true
   };
-  genres_ = ""
-  // use the access token to access the Spotify Web API
-  request.get(options, function(error, response, body) {
-    top_artists = (JSON.stringify(body));
-    fs.writeFile("analysis/top_artists.json", top_artists, (err) => {});
+
+  const top_artists_req = https.get('https://api.spotify.com/v1/me/top/artists/?limit=50&time_range=long_term', options, function(response) {
+    let data = '';
+    response.on('data', (chunk) => { data = data + chunk.toString(); });
+    response.on('end', () => {
+      const body = JSON.parse(data);
+      top_artists = (JSON.stringify(body));
+      fs.writeFileSync(path, top_artists);
+      const python = spawn('python3', ['analysis/compute.py', path]);
+      var dataToSend = "<h1>your top genres</h1>";
+      python.stdout.on('data', function (data) {
+        var json_string = data.toString();
+        var genre_object = JSON.parse(json_string.replace(/'/g, "\""));
+        for (const genre in genre_object) {
+          dataToSend += `<p>${genre}: ${(parseInt(genre_object[genre])).toString()}</p>` 
+        }
+      });
+      python.on('close', (code) => {
+        res.send((dataToSend));
+        fs.unlink(path, (err) => {
+          if (err) throw err;
+          // console.log('deleted ' + path);
+        });
+      });
+    });
   });
-  const python = spawn('python3', ['analysis/compute.py']);
-  var dataToSend = "<h1>your top genres</h1>";
-  python.stdout.on('data', function (data) {
-    var json_string = data.toString();
-    var genre_object = JSON.parse(json_string.replace(/'/g, "\""));
-    for (const genre in genre_object) {
-      dataToSend += `<p>${genre}: ${(parseInt(genre_object[genre])).toString()}</p>` 
-    }
-  });
-  python.on('close', (code) => {res.send((dataToSend))});
+  top_artists_req.on('error', (e) => {console.error(e)});
+  top_artists_req.end();
 });
 
 const PORT = process.env.PORT || 8888;
