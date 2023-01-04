@@ -13,7 +13,7 @@ var child = spawn('pwd')
 let rawdata = fs.readFileSync('keys.json');
 let keys = JSON.parse(rawdata)
 
-const remote = 1;
+const remote = 0;
 var client_id = keys['CLIENT_ID'];
 var redirect_uri = keys['REDIRECT_URI'][remote];
 
@@ -133,6 +133,7 @@ app.get('/refresh_token', function(req, res) {
 app.get('/analysis', function(req, res) {
   var access_token = req.query.access_token;
   var path = "analysis/top_artists_" + generateRandomString(16) + ".json";
+  var t_path = "analysis/top_tracks_" + generateRandomString(16) + ".json";
   var options = {
     headers: { 'Authorization': 'Bearer ' + access_token },
     json: true
@@ -143,24 +144,40 @@ app.get('/analysis', function(req, res) {
     response.on('data', (chunk) => { data = data + chunk.toString(); });
     response.on('end', () => {
       const body = JSON.parse(data);
-      top_artists = (JSON.stringify(body));
+      const top_artists = (JSON.stringify(body));
       fs.writeFileSync(path, top_artists);
-      const python = spawn('python3', ['analysis/compute.py', path]);
-      var dataToSend = "<h1>what we recommend...</h1>";
-      python.stdout.on('data', function (data) {
-        var json_string = data.toString();
-        var genre_object = JSON.parse(json_string.replace(/'/g, "\""));
-        for (const genre in genre_object) {
-          dataToSend += `<p>${genre}: ${(parseInt(genre_object[genre])).toString()}</p>` 
-        }
-      });
-      python.on('close', (code) => {
-        res.send((dataToSend));
-        fs.unlink(path, (err) => {
-          if (err) throw err;
-          // console.log('deleted ' + path);
+      const top_tracks_req = https.get('https://api.spotify.com/v1/me/top/tracks/?limit=50&time_range=long_term', options, function(t_response) {
+        let track_data = ''
+        t_response.on('data', (chunk) => { track_data = track_data + chunk.toString(); });
+        t_response.on('end', () => {
+          const t_body = JSON.parse(track_data);
+          const top_tracks = JSON.stringify(t_body);
+          fs.writeFileSync(t_path, top_tracks);
+          const python = spawn('python3', ['analysis/compute.py', path, t_path]);
+          var dataToSend = "<h1>genres we recommend...</h1>";
+          python.stdout.on('data', function (data) {
+            var json_string = data.toString();
+            var genre_object = JSON.parse(json_string.replace(/'/g, "\""));
+            for (const genre in genre_object) {
+              dataToSend += `<p>${genre}: ${(Math.round(100 * genre_object[genre]) / 100).toString()}%</p>` 
+            }
+          });
+          python.on('close', (code) => {
+            res.send((dataToSend));
+            fs.unlink(path, (err) => {
+              if (err) throw err;
+              // console.log('deleted ' + path);
+            });
+            fs.unlink(t_path, (err) => {
+              if (err) throw err;
+              // console.log('deleted ' + path);
+            });
+          });
         });
       });
+      
+      top_tracks_req.on('error', (e) => {console.error(e)});
+      top_tracks_req.end();
     });
   });
   top_artists_req.on('error', (e) => {console.error(e)});

@@ -19,6 +19,7 @@ for i, item in enumerate(data["items"]):
 
 genre_genre_scores = {}
 base_genre_scores = {}
+sum_genre_scores = 0
 
 for base_genre in bases:
     multiplier = bases[base_genre][0]
@@ -31,8 +32,22 @@ for base_genre in bases:
                     genre_genre_scores[genre_genre] += genres[loop_genre]
         if base_genre not in base_genre_scores:
             base_genre_scores[base_genre] = 0
-        base_genre_scores[base_genre] += int(multiplier) * genre_genre_scores[genre_genre]
-        
+        base_genre_scores[base_genre] += int(1 + int(multiplier - 1) / 2) * genre_genre_scores[genre_genre]
+    if base_genre_scores[base_genre] == 0:
+        base_genre_scores.pop(base_genre)
+    else:
+        sum_genre_scores += base_genre_scores[base_genre]
 
-print(dict(sorted(base_genre_scores.items(), key=lambda item: item[1], reverse=True)))
+public_base_genre_scores = {}
+for base_genre in base_genre_scores:
+    if (((base_genre[0] == 'j') or (base_genre[0] == 'k')) and base_genre[1] == '-'):
+        base_genre_mod = base_genre
+    elif base_genre == "r-n-b":
+        base_genre_mod = "r&b"
+    else:
+        base_genre_mod = base_genre.replace("-", " ")
+    public_base_genre_scores[base_genre_mod] = base_genre_scores[base_genre] / sum_genre_scores * 100
+base_genre_scores_arr = sorted(public_base_genre_scores.items(), key=lambda item: item[1], reverse=True)
+
+print(dict(base_genre_scores_arr))
 sys.stdout.flush()
