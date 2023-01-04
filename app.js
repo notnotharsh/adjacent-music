@@ -146,7 +146,7 @@ app.get('/analysis', function(req, res) {
       top_artists = (JSON.stringify(body));
       fs.writeFileSync(path, top_artists);
       const python = spawn('python3', ['analysis/compute.py', path]);
-      var dataToSend = "<h1>your top genres</h1>";
+      var dataToSend = "<h1>what we recommend...</h1>";
       python.stdout.on('data', function (data) {
         var json_string = data.toString();
         var genre_object = JSON.parse(json_string.replace(/'/g, "\""));

@@ -1,2 +1,3 @@
 node_modules/
 analysis/*.json
+!analysis/base_genres.json
