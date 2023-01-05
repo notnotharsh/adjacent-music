@@ -47,7 +47,12 @@ for base_genre in base_genre_scores:
     else:
         base_genre_mod = base_genre.replace("-", " ")
     public_base_genre_scores[base_genre_mod] = base_genre_scores[base_genre] / sum_genre_scores * 100
-base_genre_scores_arr = sorted(public_base_genre_scores.items(), key=lambda item: item[1], reverse=True)
+    base_genre_scores[base_genre] *= 100 / sum_genre_scores
 
-print(dict(base_genre_scores_arr))
+genre_scores_arr = sorted(base_genre_scores.items(), key=lambda item: item[1], reverse=True)
+public_genre_scores_arr = sorted(public_base_genre_scores.items(), key=lambda item: item[1], reverse=True)
+
+final = {"real": dict(genre_scores_arr), "public": dict(public_genre_scores_arr)}
+
+print(final)
 sys.stdout.flush()

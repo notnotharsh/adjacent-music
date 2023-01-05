@@ -146,38 +146,57 @@ app.get('/analysis', function(req, res) {
       const body = JSON.parse(data);
       const top_artists = (JSON.stringify(body));
       fs.writeFileSync(path, top_artists);
-      const top_tracks_req = https.get('https://api.spotify.com/v1/me/top/tracks/?limit=50&time_range=long_term', options, function(t_response) {
-        let track_data = ''
-        t_response.on('data', (chunk) => { track_data = track_data + chunk.toString(); });
-        t_response.on('end', () => {
-          const t_body = JSON.parse(track_data);
-          const top_tracks = JSON.stringify(t_body);
-          fs.writeFileSync(t_path, top_tracks);
-          const python = spawn('python3', ['analysis/compute.py', path, t_path]);
-          var dataToSend = "<h1>genres we recommend...</h1>";
-          python.stdout.on('data', function (data) {
-            var json_string = data.toString();
-            var genre_object = JSON.parse(json_string.replace(/'/g, "\""));
-            for (const genre in genre_object) {
-              dataToSend += `<p>${genre}: ${(Math.round(100 * genre_object[genre]) / 100).toString()}%</p>` 
+      const python_genres = spawn('python3', ['analysis/genres.py', path]);
+      var dataToSend = "<h1>genres we recommend...</h1>";
+      python_genres.stdout.on('data', function (data) {
+        var json_string = data.toString();
+        var genre_object = JSON.parse(json_string.replace(/'/g, "\""));
+        for (const genre in genre_object["public"]) {
+          dataToSend += `<p>${genre}: ${(Math.round(100 * genre_object["public"][genre]) / 100).toString()}%</p>` 
+        }
+      });
+      python_genres.on('close', (code) => {
+        fs.unlink(path, (err) => {
+          if (err) throw err;
+          // console.log('deleted ' + path);
+        });
+        const top_tracks_req = https.get('https://api.spotify.com/v1/me/top/tracks/?limit=50&time_range=long_term', options, function(t_response) {
+          let track_data = '';
+          t_response.on('data', (chunk) => { track_data = track_data + chunk.toString(); });
+          t_response.on('end', () => {
+            const t_body = JSON.parse(track_data);
+            var ids = "";
+            for (const item in t_body["items"]) { 
+              ids += t_body["items"][item]["id"];
+              ids += ",";
             }
-          });
-          python.on('close', (code) => {
-            res.send((dataToSend));
-            fs.unlink(path, (err) => {
-              if (err) throw err;
-              // console.log('deleted ' + path);
+            ids = ids.substring(0, ids.length - 1);
+            const features_req = https.get('https://api.spotify.com/v1/audio-features?ids=' + ids, options, function(f_res) {
+              let feature_data = '';
+              f_res.on('data', (chunk) => { feature_data = feature_data + chunk.toString(); });
+              f_res.on('end', () => {
+                fs.writeFileSync(t_path, feature_data);
+                const python_tracks = spawn('python3', ['analysis/tracks.py', t_path]);
+                python_tracks.stdout.on('data', function (data) {
+                  var json_string = data.toString();
+                  var genre_object = JSON.parse(json_string.replace(/'/g, "\""));
+                  for (const genre in genre_object["public"]) {
+                    dataToSend += `<p>${genre}: ${(Math.round(100 * genre_object["public"][genre]) / 100).toString()}%</p>` 
+                  }
+                });
+                res.send((dataToSend));
+                fs.unlink(t_path, (err) => {
+                  if (err) throw err;
+                  // console.log('deleted ' + path);
+                });
+              })
             });
-            fs.unlink(t_path, (err) => {
-              if (err) throw err;
-              // console.log('deleted ' + path);
-            });
+            
           });
         });
+        top_tracks_req.on('error', (e) => {console.error(e)});
+        top_tracks_req.end();
       });
-      
-      top_tracks_req.on('error', (e) => {console.error(e)});
-      top_tracks_req.end();
     });
   });
   top_artists_req.on('error', (e) => {console.error(e)});
