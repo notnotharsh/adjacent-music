@@ -13,7 +13,7 @@ var child = spawn('pwd')
 let rawdata = fs.readFileSync('keys.json');
 let keys = JSON.parse(rawdata)
 
-const remote = 0;
+const remote = 1;
 var client_id = keys['CLIENT_ID'];
 var redirect_uri = keys['REDIRECT_URI'][remote];
 
@@ -178,20 +178,21 @@ app.get('/analysis', function(req, res) {
                 fs.writeFileSync(t_path, feature_data);
                 const python_tracks = spawn('python3', ['analysis/tracks.py', t_path]);
                 python_tracks.stdout.on('data', function (data) {
-                  var json_string = data.toString();
-                  var genre_object = JSON.parse(json_string.replace(/'/g, "\""));
-                  for (const genre in genre_object["public"]) {
-                    dataToSend += `<p>${genre}: ${(Math.round(100 * genre_object["public"][genre]) / 100).toString()}%</p>` 
-                  }
+                  var new_json_string = data.toString();
+                  dataToSend += "track analysis: "
+                  dataToSend += new_json_string;
                 });
-                res.send((dataToSend));
-                fs.unlink(t_path, (err) => {
-                  if (err) throw err;
-                  // console.log('deleted ' + path);
+                python_tracks.on('close', (code) => {
+                  res.send((dataToSend));
+                  fs.unlink(t_path, (err) => {
+                    if (err) throw err;
+                    // console.log('deleted ' + path);
+                  });
                 });
               })
             });
-            
+            features_req.on('error', (e) => {console.error(e)});
+            features_req.end();
           });
         });
         top_tracks_req.on('error', (e) => {console.error(e)});
