@@ -48,6 +48,7 @@ app.use(express.static(__dirname + '/public'))
 app.get('/login', function(req, res) {
   var state = generateRandomString(16);
   res.cookie(stateKey, state);
+  res.header("Access-Control-Allow-Origin", "*");
   generateCodeChallenge(code_verifier).then((code_challenge) => {
     res.redirect('https://accounts.spotify.com/authorize?' +
       querystring.stringify({
