@@ -147,13 +147,11 @@ app.get('/analysis', function(req, res) {
       const top_artists = (JSON.stringify(body));
       fs.writeFileSync(path, top_artists);
       const python_genres = spawn('python3', ['analysis/genres.py', path]);
-      var dataToSend = "<h1>genres we recommend...</h1>";
+      var json_to_send = {};
       python_genres.stdout.on('data', function (data) {
         var json_string = data.toString();
         var genre_object = JSON.parse(json_string.replace(/'/g, "\""));
-        for (const genre in genre_object["public"]) {
-          dataToSend += `<p>${genre}: ${(Math.round(100 * genre_object["public"][genre]) / 100).toString()}%</p>` 
-        }
+        json_to_send["genres"] = genre_object;
       });
       python_genres.on('close', (code) => {
         fs.unlink(path, (err) => {
@@ -178,11 +176,12 @@ app.get('/analysis', function(req, res) {
                 fs.writeFileSync(t_path, feature_data);
                 const python_tracks = spawn('python3', ['analysis/tracks.py', t_path]);
                 python_tracks.stdout.on('data', function (data) {
-                  var new_json_string = data.toString();
-                  dataToSend += "track analysis: "
-                  dataToSend += new_json_string;
+                  var json_string = data.toString();
+                  var feature_object = JSON.parse(json_string.replace(/'/g, "\""));
+                  json_to_send["features"] = feature_object;
                 });
                 python_tracks.on('close', (code) => {
+                  var dataToSend = JSON.stringify(json_to_send);
                   res.send((dataToSend));
                   fs.unlink(t_path, (err) => {
                     if (err) throw err;

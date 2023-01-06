@@ -7,7 +7,7 @@
       * {
         font-family: 'Courier New', Courier, monospace;
       }
-      #login, #loggedin {
+      #login, #loggedin, #error {
         display: none;
       }
       .text-overflow {
@@ -23,11 +23,16 @@
   <body>
     <div class="container">
       <div id="login">
-        <h1>this is the <strong>adjacent music</strong> project</h1>
+        <h1>this is the <strong>adjacent music</strong> project, by <a href="https://github.com/notnotharsh">harsh tiwary</a></h1>
+        <h2 id="error">oops there was an error</h2>
         <a href="/login">log in with spotify</a>
       </div>
-      <div id="loggedin">
-        <div id="user-top"></div>
+      <div id="loggedin" class="col">
+        <div class="row"><h1>to expand your music taste, we recommend</h1></div>
+        <div id="information" class="row">
+          <div id="genres" class="col-xs-6"></div>
+          <div id="features" class="col-xs-6"></div>
+        </div>
       </div>
     </div>
 
@@ -50,21 +55,18 @@
           return hashParams;
         }
 
-        var userTopSource = generateGenreHTML(),
-            userTopTemplate = Handlebars.compile(userTopSource),
-            userTopPlaceholder = document.getElementById('user-top');
-
+        // var userTopSource = generateGenreHTML(),
+        // userTopTemplate = Handlebars.compile(userTopSource),
+        genresPlaceholder = document.getElementById('genres');
+        featuresPlaceholder = document.getElementById('features');
         var params = getHashParams();
-
         var access_token = params.access_token,
             refresh_token = params.refresh_token,
             error = params.error;
-
         if (error) {
-          alert('this is not an epic gamer moment (authentication error)');
+          $('#error').show();
         } else {
           if (access_token) {
-
             $.ajax({
                 url: '/analysis', // 'https://api.spotify.com/v1/me/top/artists',
                 /*
@@ -80,7 +82,21 @@
                  access_token: access_token
                 },
                 success: function(response) {
-                  userTopPlaceholder.innerHTML = (response);// userTopTemplate(response);
+                  var r_obj = JSON.parse(response);
+                  var public_genres = r_obj["genres"]["public"]
+                  var genres_HTML = "";
+                  for (genre in public_genres) {
+                    genres_HTML += `<p>${genre}: ${(Math.round(100 * public_genres[genre]) / 100).toString()}%</p>` 
+                  }
+                  genresPlaceholder.innerHTML = (genres_HTML);
+
+                  var features = r_obj["features"];
+                  var features_HTML = "";
+                  for (feature in features) {
+                    features_HTML += `<p>${feature}: mean ${(Math.round(100 * features[feature][0]) / 100).toString()}, stdev ${(Math.round(100 * features[feature][1]) / 100).toString()}</p>` 
+                  }
+                  featuresPlaceholder.innerHTML = (features_HTML);
+                  
 
                   $('#login').hide();
                   $('#loggedin').show();
