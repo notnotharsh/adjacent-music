@@ -103,9 +103,56 @@
                 }
             });
           } else {
-              // render initial screen
-              $('#login').show();
-              $('#loggedin').hide();
+              $.ajax({
+                url: "/refresh_token",
+                data: {
+                  refresh_token: refresh_token
+                },
+                success: function(response) {
+                  refresh_token = response["refresh_token"];
+                  access_token = response["access_token"];
+                  if (access_token) {
+                    $.ajax({
+                        url: '/analysis', // 'https://api.spotify.com/v1/me/top/artists',
+                        /*
+                        headers: {
+                          'Authorization': 'Bearer ' + access_token
+                        },
+                        */
+                        data: {
+                          /*
+                          limit: 50,
+                          time_range: "long_term"
+                          */
+                        access_token: access_token
+                        },
+                        success: function(response) {
+                          var r_obj = JSON.parse(response);
+                          var public_genres = r_obj["genres"]["public"]
+                          var genres_HTML = "";
+                          for (genre in public_genres) {
+                            genres_HTML += `<p>${genre}: ${(Math.round(100 * public_genres[genre]) / 100).toString()}%</p>` 
+                          }
+                          genresPlaceholder.innerHTML = (genres_HTML);
+
+                          var features = r_obj["features"];
+                          var features_HTML = "";
+                          for (feature in features) {
+                            features_HTML += `<p>${feature}: mean ${(Math.round(100 * features[feature][0]) / 100).toString()}, stdev ${(Math.round(100 * features[feature][1]) / 100).toString()}</p>` 
+                          }
+                          featuresPlaceholder.innerHTML = (features_HTML);
+                          
+
+                          $('#login').hide();
+                          $('#loggedin').show();
+                        }
+                    });
+                  } else {
+                    $('#login').show();
+                    $('#loggedin').hide();
+                  }
+                }
+              });
           }
         }
       })();
