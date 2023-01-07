@@ -102,7 +102,7 @@
                   $('#loggedin').show();
                 }
             });
-          } else {
+          } else if (refresh_token) {
               $.ajax({
                 url: "/refresh_token",
                 data: {
@@ -153,6 +153,9 @@
                   }
                 }
               });
+          } else {
+            $('#login').show();
+            $('#loggedin').hide();
           }
         }
       })();
