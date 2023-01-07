@@ -54,7 +54,7 @@ app.get('/login', function(req, res) {
       querystring.stringify({
         response_type: 'code',
         client_id: client_id,
-        scope: 'user-read-private user-top-read',
+        scope: 'user-read-private user-top-read playlist-modify-public',
         redirect_uri: redirect_uri,
         state: state,
         code_challenge_method: "S256",
@@ -179,12 +179,22 @@ app.get('/analysis', function(req, res) {
                   json_to_send["features"] = feature_object;
                 });
                 python_tracks.on('close', (code) => {
-                  var dataToSend = JSON.stringify(json_to_send);
-                  res.send((dataToSend));
                   fs.unlink(t_path, (err) => {
                     if (err) throw err;
                     // console.log('deleted ' + path);
                   });
+                  const me_req = https.get('https://api.spotify.com/v1/me', options, function(me_res) {
+                    let me_data = '';
+                    me_res.on('data', (chunk) => { me_data = me_data + chunk.toString(); });
+                    me_res.on('end', () => {
+                      const me_body = JSON.parse(me_data);
+                      json_to_send["me"] = me_body;
+                      var dataToSend = JSON.stringify(json_to_send);
+                      res.send((dataToSend));
+                    });
+                  });
+                  me_req.on('error', (e) => {console.error(e)});
+                  me_req.end();
                 });
               })
             });

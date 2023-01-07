@@ -11,6 +11,10 @@
       #login, #loggedin, #error {
         display: none;
       }
+      h2 {
+        margin-top: 0em;
+        margin-bottom: 0.5em;
+      }
       .text-overflow {
         overflow: hidden;
         text-overflow: ellipsis;
@@ -29,7 +33,7 @@
         <a href="/login">log in with spotify</a>
       </div>
       <div id="loggedin" class="col">
-        <div class="row"><h1>to expand your music taste, we recommend</h1></div>
+        <div class="row"><h1 id="header"></h1><h2>to expand your music taste, we recommend</h2></div>
         <div id="information" class="row">
           <div id="genres" class="col-xs-6"></div>
           <div id="features" class="col-xs-6"></div>
@@ -74,6 +78,7 @@
               }
               featuresPlaceholder.innerHTML = (features_HTML);
               
+              document.getElementById("header").innerHTML = "hello " + r_obj["me"]["display_name"];
 
               $('#login').hide();
               $('#loggedin').show();

@@ -59,7 +59,7 @@
     "indian": [2, "india", "bollywood", "filmi", "desi", "bhangra", "tollywood", "kollywood"],
     "indie": [2, "alternative", "underground", "indie", "modern", "art", "new"],
     "indie-pop": [2, "indie", "indie pop", "art pop", "alt z", "chamber pop", "bedroom pop", "chamber", "folk"],
-    "industrial": [3, "industrial", "industrial rock", "industrial metal", "electro-industrial", "dark", "wave", "post-punk", "ebm"],
+    "industrial": [3, "industrial", "industrial rock", "industrial metal", "electro-industrial", "dark", "wave", "post-punk", "ebm", "escape room"],
     "iranian": [4, "iran", "iranian", "persian"],
     "j-dance": [2, "j-pop", "j-dance", "j-poprock", "j-dance", "japanese r&b", "j-idol", "japanese singer-songwriter"],
     "j-idol": [2, "j-pop", "j-dance", "j-poprock", "j-dance", "japanese r&b", "j-idol", "japanese singer-songwriter"],
