@@ -31,9 +31,9 @@ for i, item in enumerate(data["audio_features"]):
 final = {
     "danceability": [avg(danceabilities), stdev(danceabilities)],
     "energy": [avg(energies), stdev(energies)],
-    "speechiness": [avg(speechinesses), stdev(speechinesses)],
-    "acousticness": [avg(acousticnesses), stdev(acousticnesses)],
-    "instrumentalness": [avg(instrumentalnesses), stdev(instrumentalnesses)],
+    "speechiness": str(avg(speechinesses) > 0.66),
+    "acousticness": str(avg(acousticnesses) > 0.5),
+    "instrumentalness": str(avg(acousticnesses) > 0.5),
     "valence": [avg(valences), stdev(valences)]
 }
 

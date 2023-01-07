@@ -93,7 +93,7 @@ app.get('/callback', function(req, res) {
       if (!error && response.statusCode === 200) {
       var access_token = body.access_token,
         refresh_token = body.refresh_token;
-      res.cookie("access_token", access_token, {expires: new Date(Date.now() + 10000)});
+      res.cookie("access_token", access_token, {expires: new Date(Date.now() + 3600000)});
       res.cookie("refresh_token", refresh_token);
       res.redirect('/');
       } else {
@@ -119,12 +119,11 @@ app.get('/refresh_token', function(req, res) {
     if (!error && response.statusCode === 200) {
       var access_token = body.access_token;
       var refresh_token = body.refresh_token;
-      res.cookie("access_token", access_token, {expires: new Date(Date.now() + 10000)});
+      res.cookie("access_token", access_token, {expires: new Date(Date.now() + 3600000)});
       res.cookie("refresh_token", refresh_token);
       res.send({'access_token': access_token, 'refresh_token': refresh_token});
     } else {
-      res.header("Access-Control-Allow-Origin", "*");
-      res.redirect("/login");
+      res.redirect("/");
     }
   });
 });

@@ -3,9 +3,10 @@
   <head>
     <title>adjacent music</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inconsolata&family=Open+Sans:wght@300&display=swap" rel="stylesheet">
     <style type="text/css">
       * {
-        font-family: 'Courier New', Courier, monospace;
+        font-family: 'Inconsolata', Courier, monospace;
       }
       #login, #loggedin, #error {
         display: none;
@@ -39,6 +40,46 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
     <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script>
+      function display(access_token) {
+        genresPlaceholder = document.getElementById('genres');
+        featuresPlaceholder = document.getElementById('features');
+        $.ajax({
+            url: '/analysis', // 'https://api.spotify.com/v1/me/top/artists',
+            /*
+            headers: {
+              'Authorization': 'Bearer ' + access_token
+            },
+            */
+            data: {
+              /*
+              limit: 50,
+              time_range: "long_term"
+              */
+              access_token: access_token
+            },
+            success: function(response) {
+              var r_obj = JSON.parse(response);
+              var public_genres = r_obj["genres"]["public"]
+              var genres_HTML = "";
+              for (genre in public_genres) {
+                genres_HTML += `<p>${genre}: ${(Math.round(100 * public_genres[genre]) / 100).toString()}%</p>` 
+              }
+              genresPlaceholder.innerHTML = (genres_HTML);
+
+              var features = r_obj["features"];
+              var features_HTML = "";
+              for (feature in features) {
+                if (features[feature] == "True" || features[feature] == "False") features_HTML +=`<p>${feature}: ${features[feature]}`
+                else features_HTML += `<p>${feature}: mean ${(Math.round(100 * features[feature][0]) / 100).toString()}, stdev ${(Math.round(100 * features[feature][1]) / 100).toString()}</p>` 
+              }
+              featuresPlaceholder.innerHTML = (features_HTML);
+              
+
+              $('#login').hide();
+              $('#loggedin').show();
+            }
+        });
+      }
       (function() {
 
         /**
@@ -57,8 +98,6 @@
 
         // var userTopSource = generateGenreHTML(),
         // userTopTemplate = Handlebars.compile(userTopSource),
-        genresPlaceholder = document.getElementById('genres');
-        featuresPlaceholder = document.getElementById('features');
         var params = getHashParams();
         var access_token = params.access_token,
             refresh_token = params.refresh_token,
@@ -67,41 +106,7 @@
           $('#error').show();
         } else {
           if (access_token) {
-            $.ajax({
-                url: '/analysis', // 'https://api.spotify.com/v1/me/top/artists',
-                /*
-                headers: {
-                  'Authorization': 'Bearer ' + access_token
-                },
-                */
-                data: {
-                  /*
-                  limit: 50,
-                  time_range: "long_term"
-                  */
-                 access_token: access_token
-                },
-                success: function(response) {
-                  var r_obj = JSON.parse(response);
-                  var public_genres = r_obj["genres"]["public"]
-                  var genres_HTML = "";
-                  for (genre in public_genres) {
-                    genres_HTML += `<p>${genre}: ${(Math.round(100 * public_genres[genre]) / 100).toString()}%</p>` 
-                  }
-                  genresPlaceholder.innerHTML = (genres_HTML);
-
-                  var features = r_obj["features"];
-                  var features_HTML = "";
-                  for (feature in features) {
-                    features_HTML += `<p>${feature}: mean ${(Math.round(100 * features[feature][0]) / 100).toString()}, stdev ${(Math.round(100 * features[feature][1]) / 100).toString()}</p>` 
-                  }
-                  featuresPlaceholder.innerHTML = (features_HTML);
-                  
-
-                  $('#login').hide();
-                  $('#loggedin').show();
-                }
-            });
+            display(access_token);
           } else if (refresh_token) {
               $.ajax({
                 url: "/refresh_token",
@@ -112,41 +117,7 @@
                   refresh_token = response["refresh_token"];
                   access_token = response["access_token"];
                   if (access_token) {
-                    $.ajax({
-                        url: '/analysis', // 'https://api.spotify.com/v1/me/top/artists',
-                        /*
-                        headers: {
-                          'Authorization': 'Bearer ' + access_token
-                        },
-                        */
-                        data: {
-                          /*
-                          limit: 50,
-                          time_range: "long_term"
-                          */
-                        access_token: access_token
-                        },
-                        success: function(response) {
-                          var r_obj = JSON.parse(response);
-                          var public_genres = r_obj["genres"]["public"]
-                          var genres_HTML = "";
-                          for (genre in public_genres) {
-                            genres_HTML += `<p>${genre}: ${(Math.round(100 * public_genres[genre]) / 100).toString()}%</p>` 
-                          }
-                          genresPlaceholder.innerHTML = (genres_HTML);
-
-                          var features = r_obj["features"];
-                          var features_HTML = "";
-                          for (feature in features) {
-                            features_HTML += `<p>${feature}: mean ${(Math.round(100 * features[feature][0]) / 100).toString()}, stdev ${(Math.round(100 * features[feature][1]) / 100).toString()}</p>` 
-                          }
-                          featuresPlaceholder.innerHTML = (features_HTML);
-                          
-
-                          $('#login').hide();
-                          $('#loggedin').show();
-                        }
-                    });
+                    display(access_token);
                   } else {
                     $('#login').show();
                     $('#loggedin').hide();
