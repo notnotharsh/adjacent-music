@@ -1,7 +1,7 @@
 {
     "acoustic": [3, "acoustic", "folk", "piano", "guitar", "singer-songwriter"],
     "afrobeat": [4, "afrobeat", "afropop", "world", "highlife", "funk", "deep"],
-    "alt-rock": [2, "alternative rock", "rock", "indie", "punk", "garage", "metal", "modern"],
+    "alt-rock": [2, "alternative rock", "indie", "punk", "garage", "metal", "modern"],
     "alternative": [2, "alternative", "experimental", "indie", "modern", "art", "new", "abstract", "progressive"],
     "ambient": [3, "ambient", "drone", "fourth world", "art pop", "intelligent dance music", "idm", "dnb"],
     "anime": [3, "anime", "seiyu", "j-pop", "j-rock", "j-poprock", "j-pixie", "shonen"],
@@ -16,7 +16,7 @@
     "chicago-house": [4, "chicago house", "house", "techno", "hip house", "deep", "acid", "tech", "funk"],
     "children": [3, "children", "kids", "nursery"],
     "chill": [3, "chill", "chill r&b", "lo-fi", "slowed and reverb", "sad"],
-    "classical": [3, "classical", "romentic", "classic", "renaissance", "choral", "minimal", "baroque", "impressionism"],
+    "classical": [3, "classical", "romantic", "classic", "renaissance", "choral", "minimal", "baroque", "impressionism"],
     "club": [3, "club", "deconstructed club", "uk bass", "house", "techno", "break", "electro"],
     "comedy": [4, "comedy", "comic"],
     "country": [2, "country", "banjo", "old-time", "mandolin", "folk", "country", "gospel"],
