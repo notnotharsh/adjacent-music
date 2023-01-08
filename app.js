@@ -14,7 +14,7 @@ var child = spawn('pwd')
 let rawdata = fs.readFileSync('keys.json');
 let keys = JSON.parse(rawdata)
 
-const remote = 0;
+const remote = 1;
 var client_id = keys['CLIENT_ID'];
 var redirect_uri = keys['REDIRECT_URI'][remote];
 
