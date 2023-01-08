@@ -222,14 +222,18 @@ app.get('/recommend', function(req, res) {
   sortable_genres.sort(function(a, b) {
       return b[1] - a[1];
   });
-  var num_groups = Math.ceil(sortable_genres.length / 5);
+  var num_groups = Math.ceil(sortable_genres.length);
   var genre_groups = [];
-  for (var i = 0; i < num_groups; i++) {
+  var i = 0;
+  while (i < num_groups) {
     let genre_string = "";
-    let num_tracks = 0; 
-    for (var j = 5 * i; j < Math.min(sortable_genres.length, 5 * i + 5); j++) {
-      genre_string += sortable_genres[j][0] + ",";
-      num_tracks += sortable_genres[j][1];
+    let num_tracks = 0;
+    var j = 0;
+    while (((num_tracks < 1) && (j <= 5)) && (i < num_groups)) {
+      genre_string += sortable_genres[i][0] + ",";
+      num_tracks += sortable_genres[i][1];
+      i++;
+      j++;
     }
     genre_string = genre_string.substring(0, genre_string.length - 1);
     num_tracks = Math.floor(num_tracks);
