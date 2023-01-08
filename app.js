@@ -222,6 +222,7 @@ app.get('/recommend', function(req, res) {
   sortable_genres.sort(function(a, b) {
       return b[1] - a[1];
   });
+  sortable_genres = [["alternative", 25], ["idm", 25], ["punk-rock", 16.67], ["indie", 16.67], ["hip-hop", 12.5], ["trip-hop", 4.17]]
   var num_groups = Math.ceil(sortable_genres.length);
   var genre_groups = [];
   var i = 0;
@@ -281,7 +282,8 @@ app.get('/recommend', function(req, res) {
         done_num++;
         if (done_num == genre_groups.length) {
           uris = uris.sort((a, b) => 0.5 - Math.random());
-          var uris_string = JSON.stringify(uris);
+          var final_obj = {genre_groups: genre_groups, uris: uris}
+          var uris_string = JSON.stringify(final_obj);
           res.send(uris_string);
         }
       });
