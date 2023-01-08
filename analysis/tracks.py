@@ -37,10 +37,10 @@ for i, item in enumerate(data["audio_features"]):
 final = {
     "danceability": [max(0, avg(danceabilities) - stdev(danceabilities)), min(1, avg(danceabilities) + stdev(danceabilities))],
     "energy": [max(0, avg(energies) - stdev(energies)), min(1, avg(energies) + stdev(energies))],
+    "valence": [max(0, avg(valences) - stdev(valences)), min(1, avg(valences) + stdev(valences))],
     "speechiness": interval(avg(speechinesses), 0.66),
     "acousticness": interval(avg(acousticnesses), 0.5),
-    "instrumentalness": interval(avg(acousticnesses), 0.5),
-    "valence": [max(0, avg(valences) - stdev(valences)), min(1, avg(valences) + stdev(valences))]
+    "instrumentalness": interval(avg(acousticnesses), 0.5)
 }
 
 print(final)

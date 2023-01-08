@@ -6,6 +6,7 @@ const querystring = require('querystring');
 const cookieParser = require('cookie-parser');
 const fs = require('fs');
 const sha256 = require('js-sha256');
+const axios = require('axios');
 
 var spawn = require('child_process').spawn
 var child = spawn('pwd')
@@ -282,8 +283,28 @@ app.get('/recommend', function(req, res) {
         if (done_num == genre_groups.length) {
           uris = uris.sort((a, b) => 0.5 - Math.random());
           var final_obj = {genre_groups: genre_groups, uris: uris}
-          var uris_string = JSON.stringify(final_obj);
-          res.send(uris_string);
+          let theDate = new Date();
+          var date_str =(theDate.toLocaleDateString('en-us', {month: '2-digit', day: '2-digit', year: 'numeric'}));
+          var time_str = (theDate.toLocaleTimeString('en-us', {hour12: false, hour: "2-digit", minute: "2-digit"}));
+          var playlist_name = (`adjacent music ${date_str} ${time_str}`);
+          var person_url = (`https://api.spotify.com/v1/users/${data["me"]["id"]}/playlists`);
+          axios.post(person_url, {
+            name: playlist_name
+          }, {headers: { 'Authorization': 'Bearer ' + access_token }}).then(function(pc_response) {
+            pc_response_data = (pc_response)["data"];
+            var playlist_id = pc_response_data["id"];
+            final_obj["playlist_id"] = playlist_id;
+            playlist_add_url = `https://api.spotify.com/v1/playlists/${playlist_id}/tracks`;
+            axios.post(playlist_add_url, {
+              uris: uris
+            }, {headers: { 'Authorization': 'Bearer ' + access_token }}).then(function(pa_response) {
+              res.send(final_obj);
+            }).catch(function(pa_error) {
+              console.error(pa_error);
+            });
+          }).catch(function(error) {
+            console.error(error);
+          });
         }
       });
     });

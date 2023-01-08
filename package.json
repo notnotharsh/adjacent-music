@@ -4,6 +4,7 @@
   "description": "node app to recommend music outside of regular genres from spotify api",
   "main": "app.js",
   "dependencies": {
+    "axios": "^1.2.2",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",

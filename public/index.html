@@ -21,6 +21,15 @@
         white-space: nowrap;
         width: 500px;
       }
+      #playlist-row {
+        text-align: center;
+        margin-bottom: 1em;
+      }
+      #playlist-row button {
+        width: 100%;
+        background-color: #445566;
+        color: #ffffff;
+      }
     </style>
     <script src="utils.js" type="text/javascript"></script>
   </head>
@@ -34,6 +43,7 @@
       </div>
       <div id="loggedin" class="col">
         <div class="row"><h1 id="header"></h1><h2>to expand your music taste, we recommend</h2></div>
+        <div class="row" id="playlist-row"><button type="button" class="btn" id="create">create playlist!</button></div>
         <div id="information" class="row">
           <div id="genres" class="col-xs-6"></div>
           <div id="features" class="col-xs-6"></div>
@@ -80,15 +90,17 @@
               
               document.getElementById("header").innerHTML = "hello " + r_obj["me"]["display_name"];
 
-              $.ajax({
-                url: '/recommend',
-                data: {
-                  access_token: access_token,
-                  data: response
-                },
-                success: function(rec_response) {
-                  console.log(rec_response);
-                }
+              document.getElementById("create").addEventListener("click", function() {
+                $.ajax({
+                  url: '/recommend',
+                  data: {
+                    access_token: access_token,
+                    data: response
+                  },
+                  success: function(rec_response) {
+                    document.getElementById("create").innerHTML = "created!";
+                  }
+                });
               });
 
               $('#login').hide();
