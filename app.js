@@ -222,7 +222,6 @@ app.get('/recommend', function(req, res) {
   sortable_genres.sort(function(a, b) {
       return b[1] - a[1];
   });
-  sortable_genres = [["alternative", 25], ["idm", 25], ["punk-rock", 16.67], ["indie", 16.67], ["hip-hop", 12.5], ["trip-hop", 4.17]]
   var num_groups = Math.ceil(sortable_genres.length);
   var genre_groups = [];
   var i = 0;
