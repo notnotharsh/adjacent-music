@@ -211,6 +211,82 @@ app.get('/analysis', function(req, res) {
   top_artists_req.end();
 });
 
+app.get('/recommend', function(req, res) {
+  var access_token = req.query.access_token;
+  var data = JSON.parse(req.query.data);
+  var genres = data["genres"]["real"];
+  let sortable_genres = [];
+  for (var genre in genres) {
+      sortable_genres.push([genre, genres[genre]]);
+  }
+  sortable_genres.sort(function(a, b) {
+      return b[1] - a[1];
+  });
+  var num_groups = Math.ceil(sortable_genres.length / 5);
+  var genre_groups = [];
+  for (var i = 0; i < num_groups; i++) {
+    let genre_string = "";
+    let num_tracks = 0; 
+    for (var j = 5 * i; j < Math.min(sortable_genres.length, 5 * i + 5); j++) {
+      genre_string += sortable_genres[j][0] + ",";
+      num_tracks += sortable_genres[j][1];
+    }
+    genre_string = genre_string.substring(0, genre_string.length - 1);
+    num_tracks = Math.floor(num_tracks);
+    if (num_tracks > 0) genre_groups.push([genre_string, num_tracks]);
+  }
+  var features = data["features"]
+  var options = {
+    headers: { 'Authorization': 'Bearer ' + access_token },
+    json: true
+  };
+  var uris = [];
+  var done_num = 0;
+  for (var i = 0; i < genre_groups.length; i++) {
+    var genre_group = genre_groups[i];
+    var url_ops = {
+      seed_genres: genre_group[0],
+      limit: genre_group[1],
+      min_danceability: features["danceability"][0],
+      max_danceability: features["danceability"][1],
+      min_energy: features["energy"][0],
+      max_energy: features["energy"][1],
+      min_speechiness: features["speechiness"][0],
+      max_speechiness: features["speechiness"][1],
+      min_acousticness: features["acousticness"][0],
+      max_acousticness: features["acousticness"][1],
+      min_instrumentalness: features["instrumentalness"][0],
+      max_instrumentalness: features["instrumentalness"][1],
+      min_valence: features["valence"][0],
+      max_valence: features["valence"][1],
+    };
+    var url = 'https://api.spotify.com/v1/recommendations?'
+    for (var option in url_ops) {
+      url += option + "=" + url_ops[option];
+      url += "&"
+    }
+    url = url.substring(0, url.length - 1);
+    const recommendations_req = https.get(url, options, function(response) {
+      let t_data = '';
+      response.on('data', (chunk) => { t_data = t_data + chunk.toString(); });
+      response.on('end', () => {
+        const body = JSON.parse(t_data);
+        for (track in body["tracks"]) {
+          uris.push(body["tracks"][track]["uri"]);
+        }
+        done_num++;
+        if (done_num == genre_groups.length) {
+          uris = uris.sort((a, b) => 0.5 - Math.random());
+          var uris_string = JSON.stringify(uris);
+          res.send(uris_string);
+        }
+      });
+    });
+    recommendations_req.on('error', (e) => {console.error(e)});
+    recommendations_req.end();
+  } 
+});
+
 const PORT = process.env.PORT || 8888;
 app.listen(PORT, () => {
   console.log(`listening on port ${PORT}...`);

@@ -74,11 +74,22 @@
               var features_HTML = "";
               for (feature in features) {
                 if (features[feature] == "True" || features[feature] == "False") features_HTML +=`<p>${feature}: ${features[feature]}`
-                else features_HTML += `<p>${feature}: mean ${(Math.round(100 * features[feature][0]) / 100).toString()}, stdev ${(Math.round(100 * features[feature][1]) / 100).toString()}</p>` 
+                else features_HTML += `<p>${feature}: min ${(Math.round(100 * features[feature][0]) / 100).toString()}, max ${(Math.round(100 * features[feature][1]) / 100).toString()}</p>` 
               }
               featuresPlaceholder.innerHTML = (features_HTML);
               
               document.getElementById("header").innerHTML = "hello " + r_obj["me"]["display_name"];
+
+              $.ajax({
+                url: '/recommend',
+                data: {
+                  access_token: access_token,
+                  data: response
+                },
+                success: function(rec_response) {
+                  console.log(rec_response);
+                }
+              });
 
               $('#login').hide();
               $('#loggedin').show();
