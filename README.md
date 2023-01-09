@@ -16,4 +16,4 @@ Upon logging in, a user may see a screen like this: ![Application](docs/applicat
 The user can click the button to create a playlist, and will find a Spotify playlist created using these genres and features:  ![Playlist](docs/playlist.png)
 
 ## Contact
-If you're interested in the project, or would like to beta test this project, please [reach out to me](https://github.com/notnotharsh)!
+If you're interested, or would like to beta test this project, please [reach out to me](https://github.com/notnotharsh)!
