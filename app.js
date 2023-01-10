@@ -55,7 +55,7 @@ app.get('/login', function(req, res) {
       querystring.stringify({
         response_type: 'code',
         client_id: client_id,
-        scope: 'user-read-private user-top-read playlist-modify-public',
+        scope: 'user-top-read playlist-modify-public',
         redirect_uri: redirect_uri,
         state: state,
         code_challenge_method: "S256",
