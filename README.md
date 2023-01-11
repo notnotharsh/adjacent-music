@@ -4,7 +4,7 @@ This project was primarily motivated out of a desire to have a service that coul
 * break down genres adjacent to those genres to expand the user's music taste (e.g. someone into jazz and funk could be recommended Afrobeat music)
 * recommend tracks in those adjacent genres that still had similar audio features as the tracks that made up the user's listening history (e.g. high danceability, low valence, etc.).
 
-It is still in development mode, and needs to be approved by Spotify before it can be logged into by the general public, but will hopefully be exapanded in the future to be able to have more precise recommendations and easier playlisting. As it stands, the project uses a user's top 50 artists to create a list of genres to recommend (in Spotify, genres are associated with artists), and a user's top 50 tracks to create a range of audio features. These genres and audio features are then used with the /recommendations endpoint of Spotify's API to generate the recommendations created in every playlist.
+It is still in development mode, and needs to be approved by Spotify before it can be logged into by the general public, but will hopefully be expanded in the future to be able to have more precise recommendations and easier playlisting. As it stands, the project uses a user's top 50 artists to create a list of genres to recommend (in Spotify, genres are associated with artists), and a user's top 50 tracks to create a range of audio features. These genres and audio features are then used with the /recommendations endpoint of Spotify's API to generate the recommendations created in every playlist.
 
 
 ## Privacy
