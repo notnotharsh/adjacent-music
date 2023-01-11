@@ -106,7 +106,7 @@
               
               document.getElementById("header").innerHTML = "hello " + r_obj["me"]["display_name"];
 
-              document.getElementById("create").addEventListener("click", function() {
+              document.getElementById("create").addEventListener("click", function initialOnClick() {
                 $.ajax({
                   url: '/recommend',
                   data: {
@@ -114,7 +114,11 @@
                     data: response
                   },
                   success: function(rec_response) {
-                    document.getElementById("create").innerHTML = "created!";
+                    document.getElementById("create").innerHTML = "created! click to listen on spotify";
+                    document.getElementById("create").removeEventListener("click", initialOnClick);
+                    document.getElementById("create").addEventListener("click", function() {
+                      window.open("https://open.spotify.com/playlist/" + rec_response["playlist_id"], '_blank');
+                    })
                   }
                 });
               });
