@@ -108,6 +108,7 @@
               document.getElementById("header").innerHTML = "hello " + r_obj["me"]["display_name"];
 
               document.getElementById("create").addEventListener("click", function initialOnClick() {
+                document.getElementById("create").innerHTML = "creating playlist...";
                 $.ajax({
                   url: '/recommend',
                   data: {
