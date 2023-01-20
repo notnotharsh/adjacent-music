@@ -42,6 +42,9 @@
         margin-left: 10px;
         padding-left: 10px;
       }
+      #loading {
+        display: none;
+      }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
@@ -76,7 +79,7 @@
         </div>
     </div>
     <div class="gap" style="height: 20px"></div>
-    <div style="margin-left: -10px;">
+    <div id="changeStyle" style="margin-left: 0px;">
       <h2><a href="#more-expand" data-toggle="collapse">more...</a></h2>
       <div id="more-expand" class="collapse">
         <div id="about" class="col">
@@ -101,6 +104,8 @@
 
     <script>
       function display(access_token) {
+        $('#loading').show();
+        document.getElementById("changeStyle").style.marginLeft = "-10px";
         genresPlaceholder = document.getElementById('genres');
         featuresPlaceholder = document.getElementById('features');
         $.ajax({
@@ -182,9 +187,10 @@
                   }
                 });
               });
-
               $('#login').hide();
               $('#loading').hide();
+
+              document.getElementById("changeStyle").style.marginLeft = "-10px";
               $('#loggedin').show();
             }
         });
