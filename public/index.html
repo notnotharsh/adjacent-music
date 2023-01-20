@@ -2,11 +2,15 @@
 <html>
   <head>
     <title>adjacent music</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inconsolata&family=Open+Sans:wght@300&display=swap" rel="stylesheet">
     <style type="text/css">
       * {
         font-family: 'Inconsolata', Courier, monospace;
+      }
+      body {
+        padding: 10px;
       }
       #login, #loggedin, #error {
         display: none;
@@ -34,6 +38,10 @@
         padding-left: 20px;
         padding-right: 20px;
       }
+      ul {
+        margin-left: 10px;
+        padding-left: 10px;
+      }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
@@ -42,7 +50,7 @@
 
   <body>
     <div class="container">
-      <div class="row"><h1 id="logo"><img src="assets/Spotify_Logo_RGB_Green.png" width="20%"/></h1></div>
+      <div class="row" style="text-align: center;"><h1 id="logo"><img src="assets/Spotify_Logo_RGB_Green.png" style="width: 200px"/></h1></div>
       <div id="login">
         <h1>this is the <strong>adjacent music</strong> project, by <a href="https://github.com/notnotharsh">harsh tiwary</a></h1>
         <h2 id="error">oops there was an error</h2>
@@ -53,11 +61,11 @@
         <div class="row" id="playlist-row"><button type="button" class="btn" id="create">create playlist!</button></div>
         <div id="information" class="row">
           <div id="gCol" class="col-xs-6">
-            <div id="gHead" class="row"><h3>genres like</h3><p style="font-size: 20px;"id="gHeadInfo"></p></div>
+            <div id="gHead" class="row"><h3>genres like</h3><p style="font-size: 16px;"id="gHeadInfo"></p></div>
             <div id="genres" class="row collapse"><h4>genres adjacent to your music taste:</h4></div>
           </div>
           <div id="pCol" class="col-xs-6">
-            <div id="pHead" class="row"><h3>tracks with audio features such as</h3><p style="font-size: 20px;"id="pHeadInfo"></p></div>
+            <div id="pHead" class="row"><h3>tracks with</h3><p style="font-size: 16px;"id="pHeadInfo"></p></div>
             <div id="features" class="row collapse"><h4>all quantities range from 0 to 1</h4></div>
           </div>
         </div>
