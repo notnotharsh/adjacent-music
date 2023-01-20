@@ -56,6 +56,7 @@
         <h2 id="error">oops there was an error</h2>
         <a href="/login">log in with spotify</a>
       </div>
+      <div id="loading"><div class="row"><h1>loading...</h1></div></div>
       <div id="loggedin" class="col">
         <div class="row"><h1 id="header"></h1><h2>to expand your music taste, we recommend</h2></div>
         <div class="row" id="playlist-row"><button type="button" class="btn" id="create">create playlist!</button></div>
@@ -75,21 +76,26 @@
         </div>
     </div>
     <div class="gap" style="height: 20px"></div>
-    <div id="about" class="col">
-      <h2>what is this project?</h2>
-      <p>This project was primarily motivated out of a desire to have a service that could
-        <ul>
-          <li>analyze which genres a user listened to</li>
-          <li>break down genres adjacent to those genres to expand the user's music taste (e.g. someone into jazz and funk could be recommended Afrobeat music)</li>
-          <li>recommend tracks in those adjacent genres that still had similar audio features as the tracks that made up the user's listening history (e.g. high danceability, low valence, etc.).</li>
-        </ul>
-        It is still in development, but will hopefully be exapanded in the future to be able to have more precise recommendations. As it stands, the project uses a user's top 50 artists to create a list of genres to recommend (in Spotify, genres are associated with artists), and a user's top 50 tracks to create a range of audio features. These genres and audio features are then used with the /recommendations endpoint of Spotify's API to generate the recommendations created in every playlist.
-      </p>
-    </div>
-    <div id="privacy" class="col">
-      <h2>privacy policy</h2>
-        <p>This project does not store usernames, passwords, or tokens on any server or database. All authentication and authorization is done through the <a href="https://oauth.net/2/pkce/">PKCE extension</a> of Spotify's <a href="https://developer.spotify.com/documentation/general/guides/authorization/">OAuth</a> authorization framework.</p>
-        <p>Cookies are stored on this website simply for user convenience in logging in. They do not store any information regarding your listening data.</p>
+    <div style="margin-left: -10px;">
+      <h2><a href="#more-expand" data-toggle="collapse">more...</a></h2>
+      <div id="more-expand" class="collapse">
+        <div id="about" class="col">
+          <h3>what is this project?</h3>
+          <p>This project was primarily motivated out of a desire to have a service that could
+            <ul>
+              <li>analyze which genres a user listened to</li>
+              <li>break down genres adjacent to those genres to expand the user's music taste (e.g. someone into jazz and funk could be recommended Afrobeat music)</li>
+              <li>recommend tracks in those adjacent genres that still had similar audio features as the tracks that made up the user's listening history (e.g. high danceability, low valence, etc.).</li>
+            </ul>
+            It is still in development, but will hopefully be exapanded in the future to be able to have more precise recommendations. As it stands, the project uses a user's top 50 artists to create a list of genres to recommend (in Spotify, genres are associated with artists), and a user's top 50 tracks to create a range of audio features. These genres and audio features are then used with the /recommendations endpoint of Spotify's API to generate the recommendations created in every playlist.
+          </p>
+        </div>
+        <div id="privacy" class="col">
+          <h3>privacy policy</h3>
+            <p>This project does not store usernames, passwords, or tokens on any server or database. All authentication and authorization is done through the <a href="https://oauth.net/2/pkce/">PKCE extension</a> of Spotify's <a href="https://developer.spotify.com/documentation/general/guides/authorization/">OAuth</a> authorization framework.</p>
+            <p>Cookies are stored on this website simply for user convenience in logging in. They do not store any information regarding your listening data.</p>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -178,6 +184,7 @@
               });
 
               $('#login').hide();
+              $('#loading').hide();
               $('#loggedin').show();
             }
         });
