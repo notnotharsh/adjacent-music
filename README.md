@@ -8,7 +8,7 @@ It is still in development, but will hopefully be expanded in the future to be a
 
 
 ## Privacy
-* This project does not store usernames, passwords, or tokens on any server or database. All authentication and authorization is done through the [PKCE extension](https://oauth.net/2/pkce/) of Spotify's [OAuth](https://developer.spotify.com/documentation/general/guides/authorization/) authorization framework.
+* This project does not store usernames, passwords, or tokens on any server or database. All authentication and authorization is done through the [PKCE extension](https://www.rfc-editor.org/rfc/rfc7636) of Spotify's [OAuth](https://developer.spotify.com/documentation/general/guides/authorization/) authorization framework.
 * Cookies are stored on this website simply for user convenience in logging in. They do not store any information regarding your listening data.
 
 ## Example

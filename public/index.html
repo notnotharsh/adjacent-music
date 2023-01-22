@@ -95,7 +95,7 @@
         </div>
         <div id="privacy" class="col">
           <h3>privacy policy</h3>
-            <p>This project does not store usernames, passwords, or tokens on any server or database. All authentication and authorization is done through the <a href="https://oauth.net/2/pkce/">PKCE extension</a> of Spotify's <a href="https://developer.spotify.com/documentation/general/guides/authorization/">OAuth</a> authorization framework.</p>
+            <p>This project does not store usernames, passwords, or tokens on any server or database. All authentication and authorization is done through the <a href="https://www.rfc-editor.org/rfc/rfc7636">PKCE extension</a> of Spotify's <a href="https://developer.spotify.com/documentation/general/guides/authorization/">OAuth</a> authorization framework.</p>
             <p>Cookies are stored on this website simply for user convenience in logging in. They do not store any information regarding your listening data.</p>
         </div>
       </div>
@@ -179,7 +179,7 @@
                     data: response
                   },
                   success: function(rec_response) {
-                    document.getElementById("create").innerHTML = "created! click to listen on spotify";
+                    document.getElementById("create").innerHTML = "playlist created! click to listen on spotify";
                     document.getElementById("create").removeEventListener("click", initialOnClick);
                     document.getElementById("create").addEventListener("click", function() {
                       window.open("https://open.spotify.com/playlist/" + rec_response["playlist_id"], '_blank');
