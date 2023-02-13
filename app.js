@@ -286,10 +286,12 @@ app.get('/recommend', function(req, res) {
           let theDate = new Date();
           var date_str =(theDate.toLocaleDateString('en-us', {month: '2-digit', day: '2-digit', year: 'numeric'}));
           var time_str = (theDate.toLocaleTimeString('en-us', {hour12: false, hour: "2-digit", minute: "2-digit"}));
-          var playlist_name = (`adjacent music ${date_str} ${time_str}`);
+          var playlist_name = (`adjacent music (${date_str}, ${time_str})`);
+          var description_name = `created by adjacent-music.onrender.com`;
           var person_url = (`https://api.spotify.com/v1/users/${data["me"]["id"]}/playlists`);
           axios.post(person_url, {
-            name: playlist_name
+            name: playlist_name,
+            description: description_name,
           }, {headers: { 'Authorization': 'Bearer ' + access_token }}).then(function(pc_response) {
             pc_response_data = (pc_response)["data"];
             var playlist_id = pc_response_data["id"];
